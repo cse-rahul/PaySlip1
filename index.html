@@ -13,11 +13,10 @@
     .paper { background:#fff; border:1px solid #e5eaf1; border-radius:5px; box-shadow:0 5px 18px rgba(27,47,80,.08); padding:25px 30px; margin:0 auto; width:100%; }
     .topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; }
     .brand { display:flex; gap:12px; align-items:center; }
-    
-    /* Logo CSS Placeholder / Image Styling */
+
     .logo-container { width:112px; height:54px; display:flex; align-items:center; justify-content:flex-start; }
     .logo { max-width:112px; max-height:54px; object-fit:contain; object-position:left center; }
-    
+
     .brand-copy { width:180px; }
     .brand-copy strong { display:block; font-size:12px; }
     .brand-copy small { color:#536071; font-size:8px; }
@@ -27,27 +26,22 @@
     .company { width:66%; margin-top:15px; }
     .company-name { border:1px solid var(--blue); padding:4px 6px; font-size:14px; }
     .company-address { margin-top:4px; color:#475467; font-size:10px; line-height:1.55; }
-    
-    input { width:100%; border:0; border-bottom:1px dashed #d6e0ef; padding:4px 1px; outline:0; color:var(--ink); background:transparent; font:inherit; }
+
+    input { width:100%; min-width:0; border:0; border-bottom:1px dashed #d6e0ef; padding:4px 1px; outline:0; color:var(--ink); background:transparent; font:inherit; }
     input:focus { border-bottom-color:var(--blue); }
-    
-    /* PDF Print Styles */
-    .print-val { display:none; padding:4px 1px; font-size:10px; font-weight:500; }
-    
-    .pdf-mode { width:780px !important; max-width:780px !important; margin:0 auto !important; padding:20px !important; }
-    .pdf-mode input { display:none !important; }
-    .pdf-mode .print-val { display:block !important; }
-    .pdf-mode .actions, .pdf-mode .status, .pdf-mode .row-add, .pdf-mode .row-delete { display:none !important; }
+
+    .print-val { display:none; padding:4px 1px; font-size:10px; font-weight:500; overflow-wrap:anywhere; }
 
     .section-title { margin:24px 0 10px; font-weight:700; font-size:12px; }
     .details-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 30px; }
-    .field { display:grid; grid-template-columns:110px 1fr; align-items:center; gap:8px; }
+    .field { display:grid; grid-template-columns:110px minmax(0,1fr); align-items:center; gap:8px; }
     .field label { font-size:10px; }
     .field input { font-size:10px; }
-    .tables { display:grid; grid-template-columns:1fr 1fr; border:1px solid #edf0f5; box-shadow:0 3px 10px rgba(27,47,80,.06); }
+    .tables { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); border:1px solid #edf0f5; box-shadow:0 3px 10px rgba(27,47,80,.06); }
+    .table-wrap { min-width:0; }
     .table-wrap + .table-wrap { border-left:1px solid #edf0f5; }
     table { width:100%; border-collapse:collapse; table-layout:fixed; }
-    th,td { padding:7px 10px; border-bottom:1px solid #eef1f5; text-align:left; font-size:10px; }
+    th,td { padding:7px 10px; border-bottom:1px solid #eef1f5; text-align:left; font-size:10px; overflow-wrap:anywhere; }
     th:first-child,td:first-child { width:55%; }
     th:nth-child(2),td:nth-child(2) { text-align:right; width:33%; }
     th:last-child,td:last-child { text-align:center; width:12%; }
@@ -63,11 +57,36 @@
     .summary strong { display:block; font-size:11px; }
     .summary small { color:var(--muted); font-size:9px; }
     .words { margin:8px 0 0; text-align:right; font-size:10px; min-height:20px; border-bottom:1px solid #e2e6ec; padding-bottom:4px; }
-    .actions { display:flex; justify-content:center; gap:14px; margin-top:25px; }
+    .actions { display:flex; justify-content:center; gap:14px; margin-top:25px; flex-wrap:wrap; }
     button { font:700 11px inherit; padding:8px 18px; border-radius:4px; cursor:pointer; }
     .primary { color:#fff; background:var(--coral); border:1px solid var(--coral); }
     .secondary { color:var(--ink); background:#fff; border:1px solid var(--ink); }
     .status { color:var(--muted); text-align:center; min-height:17px; margin-top:9px; font-size:10px; }
+
+    /* Narrow screens / narrow Zoho web tab */
+    @media (max-width:640px) {
+      .page { padding:10px; }
+      .paper { padding:16px 14px; }
+      .topbar { flex-direction:column; gap:10px; }
+      .period { text-align:left; }
+      .company { width:100%; }
+      .details-grid { grid-template-columns:1fr; }
+      .tables { grid-template-columns:1fr; }
+      .table-wrap + .table-wrap { border-left:0; border-top:1px solid #edf0f5; }
+    }
+
+    /* PDF mode: the slip fills whatever width html2pdf gives it (A4 minus margins),
+       and always uses the desktop layout regardless of the screen/iframe width. */
+    .pdf-mode { width:100% !important; max-width:none !important; margin:0 !important; padding:6px 10px !important; border:0 !important; border-radius:0 !important; box-shadow:none !important; }
+    .pdf-mode input { display:none !important; }
+    .pdf-mode .print-val { display:block !important; }
+    .pdf-mode .actions, .pdf-mode .status, .pdf-mode .row-add, .pdf-mode .row-delete { display:none !important; }
+    .pdf-mode .topbar { flex-direction:row !important; gap:20px !important; }
+    .pdf-mode .period { text-align:right !important; }
+    .pdf-mode .company { width:66% !important; }
+    .pdf-mode .details-grid { grid-template-columns:1fr 1fr !important; }
+    .pdf-mode .tables { grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; box-shadow:none !important; }
+    .pdf-mode .table-wrap + .table-wrap { border-left:1px solid #edf0f5 !important; border-top:0 !important; }
 
     @media print { body{background:#fff}.page{padding:0}.paper{border:0;box-shadow:none}.actions,.status,.row-add,.row-delete{display:none!important} input{border-bottom:0} }
   </style>
@@ -82,7 +101,7 @@
           </div>
           <div class="brand-copy"><strong>AVFx Solutions Pvt Ltd</strong><small>Official Salary Payslip</small></div>
         </div>
-        <div class="period">Payslip For the Month <strong id="monthPreview">September 2026</strong></div>
+        <div class="period">Payslip For the Month <strong id="monthPreview"></strong></div>
       </header>
 
       <div class="company">
@@ -94,10 +113,10 @@
       <div class="details-grid">
         <div class="field"><label>Employee Name</label><input id="employeeName" placeholder="Eg: Meera Krishnan"><span class="print-val"></span></div>
         <div class="field"><label>Employee ID</label><input id="employeeId" placeholder="Eg: 1234"><span class="print-val"></span></div>
-        <div class="field"><label>Pay Period</label><input id="payPeriod" type="month" value="2026-09"><span class="print-val"></span></div>
+        <div class="field"><label>Pay Period</label><input id="payPeriod" type="month"><span class="print-val"></span></div>
         <div class="field"><label>Paid Days</label><input id="paidDays" type="number" min="0" placeholder="Eg: 22"><span class="print-val"></span></div>
         <div class="field"><label>Loss of Pay Days</label><input id="lossDays" type="number" min="0" value="0"><span class="print-val"></span></div>
-        <div class="field"><label>Pay Date</label><input id="payDate" type="date" value="2026-09-01"><span class="print-val"></span></div>
+        <div class="field"><label>Pay Date</label><input id="payDate" type="date"><span class="print-val"></span></div>
       </div>
 
       <h3 class="section-title">Income Details</h3>
@@ -121,24 +140,44 @@
   </main>
 
   <script>
-    const defaults = { 
-      earnings:[['Basic',0],['House Rent Allowance',0],['Gross Earnings',0]], 
-      deductions:[['Income Tax',0],['Provident Fund',0],['Total Deductions',0]] 
+    const defaults = {
+      earnings:[['Basic',0],['House Rent Allowance',0],['Gross Earnings',0]],
+      deductions:[['Income Tax',0],['Provident Fund',0],['Total Deductions',0]]
     };
-    
-    let state = { 
-      earnings: defaults.earnings.map(row=>[...row]), 
-      deductions: defaults.deductions.map(row=>[...row]) 
+
+    let state = {
+      earnings: defaults.earnings.map(row=>[...row]),
+      deductions: defaults.deductions.map(row=>[...row])
     };
 
     const money = value => `₹${Number(value || 0).toLocaleString('en-IN')}`;
     const parseAmount = value => Number(String(value).replace(/[^0-9.-]/g,'')) || 0;
-    
-    const formatMonth = value => { 
+    const pad = n => String(n).padStart(2, '0');
+
+    const formatMonth = value => {
       if(!value) return '';
-      const date = new Date(`${value}-01T00:00:00`); 
-      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-US',{month:'long',year:'numeric'}); 
+      const date = new Date(`${value}-01T00:00:00`);
+      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-US',{month:'long',year:'numeric'});
     };
+
+    const formatDate = value => {
+      if(!value) return '';
+      const date = new Date(`${value}T00:00:00`);
+      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    };
+
+    // Header month always mirrors the Pay Period field
+    function updateMonthPreview() {
+      document.getElementById('monthPreview').textContent = formatMonth(document.getElementById('payPeriod').value);
+    }
+
+    // Default the pay period to the current month and the pay date to today
+    function setDefaultDates() {
+      const now = new Date();
+      document.getElementById('payPeriod').value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+      document.getElementById('payDate').value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+      updateMonthPreview();
+    }
 
     function renderRows(type) {
       const body = document.getElementById(`${type}Body`);
@@ -146,7 +185,7 @@
         const total = index === state[type].length - 1;
         const deleteButton = total ? '' : `<button class="row-delete" type="button" data-delete="${type}" data-index="${index}">&times;</button>`;
         const amtValue = total ? money(row[1]) : row[1];
-        
+
         return `
           <tr class="${total ? 'total-row' : ''}">
             <td>
@@ -165,12 +204,12 @@
     function calculateTotalsOnly() {
       let gross = 0;
       state.earnings.slice(0, -1).forEach(row => { gross += Number(row[1] || 0); });
-      
+
       let deductions = 0;
       state.deductions.slice(0, -1).forEach(row => { deductions += Number(row[1] || 0); });
 
-      state.earnings.at(-1)[1] = gross; 
-      state.deductions.at(-1)[1] = deductions; 
+      state.earnings.at(-1)[1] = gross;
+      state.deductions.at(-1)[1] = deductions;
 
       const grossInput = document.querySelector(`input[data-type="earnings"][data-index="${state.earnings.length-1}"][data-key="amount"]`);
       if(grossInput) {
@@ -185,8 +224,8 @@
       }
 
       const net = gross - deductions;
-      document.getElementById('netPay').textContent = money(net); 
-      document.getElementById('amountWords').textContent = net > 0 ? `${Math.round(net).toLocaleString('en-IN')} rupees only` : ''; 
+      document.getElementById('netPay').textContent = money(net);
+      document.getElementById('amountWords').textContent = net > 0 ? `${Math.round(net).toLocaleString('en-IN')} rupees only` : '';
     }
 
     document.querySelector('.tables').addEventListener('click', event => {
@@ -194,7 +233,7 @@
       if (!button) return;
       const type = button.dataset.add || button.dataset.delete;
       if (type !== 'earnings' && type !== 'deductions') return;
-      
+
       if (button.dataset.add) {
         state[type].splice(-1, 0, ['New Item', 0]);
       } else {
@@ -226,74 +265,82 @@
       calculateTotalsOnly();
     });
 
-    document.getElementById('payPeriod').addEventListener('input', event => {
-      document.getElementById('monthPreview').textContent = formatMonth(event.target.value);
-    });
+    ['input', 'change'].forEach(evt =>
+      document.getElementById('payPeriod').addEventListener(evt, updateMonthPreview)
+    );
 
-    document.getElementById('reset').addEventListener('click', () => { 
-      document.querySelectorAll('.field input').forEach(input => { 
-        if (input.id === 'payPeriod') input.value = '2026-09'; 
-        else if (input.id === 'payDate') input.value = '2026-09-01'; 
-        else input.value = input.id === 'lossDays' ? '0' : ''; 
-      }); 
-      state.earnings = defaults.earnings.map(row => [...row]); 
-      state.deductions = defaults.deductions.map(row => [...row]); 
-      renderRows('earnings'); 
+    document.getElementById('reset').addEventListener('click', () => {
+      document.querySelectorAll('.field input').forEach(input => {
+        input.value = input.id === 'lossDays' ? '0' : '';
+      });
+      setDefaultDates();
+      state.earnings = defaults.earnings.map(row => [...row]);
+      state.deductions = defaults.deductions.map(row => [...row]);
+      renderRows('earnings');
       renderRows('deductions');
-      calculateTotalsOnly(); 
-      document.getElementById('status').textContent = ''; 
+      calculateTotalsOnly();
+      document.getElementById('status').textContent = '';
     });
 
-    document.getElementById('generate').addEventListener('click', async () => { 
-      const button = document.getElementById('generate'); 
-      const payslip = document.getElementById('payslip'); 
-      button.disabled = true; 
-      
+    document.getElementById('generate').addEventListener('click', async () => {
+      const button = document.getElementById('generate');
+      const payslip = document.getElementById('payslip');
+      button.disabled = true;
+
+      updateMonthPreview();
+
       document.querySelectorAll('.field').forEach(field => {
         const input = field.querySelector('input');
         const printVal = field.querySelector('.print-val');
         if (input && printVal) {
-          if (input.type === 'month') {
-            printVal.textContent = formatMonth(input.value);
-          } else {
-            printVal.textContent = input.value || '-';
-          }
+          if (input.type === 'month') printVal.textContent = formatMonth(input.value) || '-';
+          else if (input.type === 'date') printVal.textContent = formatDate(input.value) || '-';
+          else printVal.textContent = input.value || '-';
         }
       });
 
-      payslip.classList.add('pdf-mode'); 
-      document.getElementById('status').textContent = 'Preparing PDF...'; 
-      
-      try { 
-        if (typeof html2pdf !== 'function') throw new Error('PDF library did not load'); 
-        
-        const empId = document.getElementById('employeeId').value || 'employee';
+      payslip.classList.add('pdf-mode');
+      document.getElementById('status').textContent = 'Preparing PDF...';
+
+      try {
+        if (typeof html2pdf !== 'function') throw new Error('PDF library did not load');
+
+        // File name: EmployeeName_EmpId.pdf (characters not allowed in file names are removed)
+        const clean = v => v.trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, ' ');
+        const empName = clean(document.getElementById('employeeName').value);
+        const empId = clean(document.getElementById('employeeId').value);
 
         const opt = {
           margin: [8, 8, 8, 8],
-          filename: `payslip-${empId}.pdf`,
+          filename: `${[empName, empId].filter(Boolean).join('_') || 'payslip'}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { 
-            scale: 2, 
-            useCORS: false, 
+          html2canvas: {
+            scale: 2,
+            useCORS: false,
             allowTaint: true,
-            logging: false
+            logging: false,
+            // Render as if in a desktop-width window at the top-left,
+            // so a narrow or scrolled Zoho web tab can't clip the capture.
+            windowWidth: 1024,
+            scrollX: 0,
+            scrollY: 0
           },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        await html2pdf().set(opt).from(payslip).save(); 
-        
-        document.getElementById('status').textContent = 'PDF downloaded successfully.'; 
-      } catch (error) { 
-        console.error('PDF Generation Error:', error); 
-        document.getElementById('status').textContent = 'PDF download failed. Please try again.'; 
-      } finally { 
-        payslip.classList.remove('pdf-mode'); 
-        button.disabled = false; 
-      } 
+        await html2pdf().set(opt).from(payslip).save();
+
+        document.getElementById('status').textContent = 'PDF downloaded successfully.';
+      } catch (error) {
+        console.error('PDF Generation Error:', error);
+        document.getElementById('status').textContent = 'PDF download failed. Please try again.';
+      } finally {
+        payslip.classList.remove('pdf-mode');
+        button.disabled = false;
+      }
     });
 
+    setDefaultDates();
     renderRows('earnings');
     renderRows('deductions');
     calculateTotalsOnly();
