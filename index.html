@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AVFx Payslip Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root { --ink:#172033; --muted:#647084; --line:#dce4ee; --blue:#246bfe; --coral:#f34b48; }
     * { box-sizing:border-box; }
@@ -299,36 +300,47 @@
         }
       });
 
-      payslip.classList.add('pdf-mode');
       document.getElementById('status').textContent = 'Preparing PDF...';
 
       try {
-        if (typeof html2pdf !== 'function') throw new Error('PDF library did not load');
+        if (typeof html2canvas !== 'function' || !window.jspdf) throw new Error('PDF library did not load');
 
         // File name: EmployeeName_EmpId.pdf (characters not allowed in file names are removed)
         const clean = v => v.trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, ' ');
         const empName = clean(document.getElementById('employeeName').value);
         const empId = clean(document.getElementById('employeeId').value);
 
-        const opt = {
-          margin: [8, 8, 8, 8],
-          filename: `${[empName, empId].filter(Boolean).join('_') || 'payslip'}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: false,
-            allowTaint: true,
-            logging: false,
-            // Render as if in a desktop-width window at the top-left,
-            // so a narrow or scrolled Zoho web tab can't clip the capture.
-            windowWidth: 1024,
-            scrollX: 0,
-            scrollY: 0
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+        const filename = `${[empName, empId].filter(Boolean).join('_') || 'payslip'}.pdf`;
 
-        await html2pdf().set(opt).from(payslip).save();
+        // A4 in mm, page margin in mm, and the fixed pixel width the slip is laid out at for the PDF
+        const PAGE_W = 210, PAGE_H = 297, MARGIN = 8, RENDER_W = 760;
+
+        // The capture is taken from a hidden copy of the page. In that copy the slip is
+        // pinned to the top-left at a fixed width, so the size, scroll position or
+        // centering of the Zoho web tab cannot shift or clip it.
+        const canvas = await html2canvas(payslip, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          windowWidth: 1024,
+          scrollX: 0,
+          scrollY: 0,
+          onclone: (doc, el) => {
+            doc.documentElement.style.cssText = 'margin:0;padding:0';
+            doc.body.style.cssText = 'margin:0;padding:0;min-width:0;background:#fff';
+            el.parentElement.style.cssText = `width:${RENDER_W}px;max-width:none;margin:0;padding:0`;
+            el.classList.add('pdf-mode');
+          }
+        });
+
+        const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+        let w = PAGE_W - 2 * MARGIN;
+        let h = canvas.height * w / canvas.width;
+        const maxH = PAGE_H - 2 * MARGIN;
+        if (h > maxH) { w = w * maxH / h; h = maxH; }   // long slips shrink to stay on one page
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', (PAGE_W - w) / 2, MARGIN, w, h);
+        pdf.save(filename);
 
         document.getElementById('status').textContent = 'PDF downloaded successfully.';
       } catch (error) {
