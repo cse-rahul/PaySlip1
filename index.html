@@ -95,13 +95,13 @@
     /* PDF mode: A4 content width with fluid height.
        This prevents clipping in Zoho Web Tabs and lets longer payslips flow to page 2. */
     .pdf-mode {
-      width:190mm !important;
-      max-width:190mm !important;
-      min-width:190mm !important;
-      min-height:277mm !important;
-      height:auto !important;
+      width:185mm !important;
+      max-width:185mm !important;
+      min-width:185mm !important;
+      min-height:265mm !important;
+      height:265mm !important;
       margin:0 auto !important;
-      padding:10mm 8mm 8mm !important;
+      padding:6mm 6mm 4mm !important;
       box-shadow:none !important;
       border:0 !important;
       border-radius:0 !important;
@@ -219,15 +219,15 @@
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .page { padding:0; }
       .paper {
-        width:190mm !important;
-        max-width:190mm !important;
-        min-width:190mm !important;
-        min-height:277mm !important;
-        height:auto !important;
+        width:185mm !important;
+        max-width:185mm !important;
+        min-width:185mm !important;
+        min-height:265mm !important;
+        height:265mm !important;
         border:0 !important;
         box-shadow:none !important;
         border-radius:0 !important;
-        padding:10mm 8mm 8mm !important;
+        padding:6mm 6mm 4mm !important;
       }
       .actions, .status, .row-add, .row-delete { display:none!important; }
       input { border-bottom:0; }
@@ -669,15 +669,15 @@
 
 
         const opt = {
-          margin: [0, 0, 0, 0],
+          margin: [5, 5, 5, 5],
           filename: `${empName}-${empId}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
             scale: 2,
-            width: 794,
-            height: 1123,
-            windowWidth: 794,
-            windowHeight: 1123,
+            width: 595,
+            height: 842,
+            windowWidth: 595,
+            windowHeight: 842,
             useCORS: true,
             allowTaint: true,
             logging: false,
@@ -686,7 +686,7 @@
             scrollY: 0
           },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          pagebreak: { mode: ['css', 'legacy'], avoid: ['tr', '.summary', '.details-grid'] }
+          pagebreak: { mode: ['avoid-all'] }
         };
 
 
